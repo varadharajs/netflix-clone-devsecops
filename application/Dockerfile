@@ -1,9 +1,9 @@
-# Stage 1: Build the React application
+# Stage 1: Build the application
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy dependency files
 COPY package*.json ./
 
 # Install dependencies
@@ -11,6 +11,10 @@ RUN npm ci
 
 # Copy application source code
 COPY . .
+
+# TMDB API key passed during Docker build
+ARG VITE_APP_TMDB_V3_API_KEY
+ENV VITE_APP_TMDB_V3_API_KEY=$VITE_APP_TMDB_V3_API_KEY
 
 # Build the Vite application
 RUN npm run build
