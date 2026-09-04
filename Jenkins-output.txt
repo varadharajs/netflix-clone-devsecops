@@ -1,0 +1,556 @@
+Started by user varadharaj
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/Netflix-Clone-DevSecOps
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout Source Code)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/Netflix-Clone-DevSecOps/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/varadharajs/netflix-clone-devsecops.git # timeout=10
+Fetching upstream changes from https://github.com/varadharajs/netflix-clone-devsecops.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.53.0'
+ > git fetch --tags --force --progress -- https://github.com/varadharajs/netflix-clone-devsecops.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 964fa7277ed97a6ccdac7525e714214d3f650a7d (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 964fa7277ed97a6ccdac7525e714214d3f650a7d # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D main # timeout=10
+ > git checkout -b main 964fa7277ed97a6ccdac7525e714214d3f650a7d # timeout=10
+Commit message: "dockerfile apikey"
+ > git rev-list --no-walk 964fa7277ed97a6ccdac7525e714214d3f650a7d # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Check Project Files)
+[Pipeline] sh
++ echo ==================================
+==================================
++ echo Project files:
+Project files:
++ echo ==================================
+==================================
++ ls -la
+total 24
+drwxr-xr-x 4 jenkins jenkins 4096 Sep  3 11:25 .
+drwxr-xr-x 4 jenkins jenkins 4096 Sep  3 11:21 ..
+drwxr-xr-x 7 jenkins jenkins 4096 Sep  4 12:36 .git
+-rw-r--r-- 1 jenkins jenkins   35 Sep  3 11:25 .gitignore
+-rw-r--r-- 1 jenkins jenkins  349 Sep  3 11:25 README.md
+drwxr-xr-x 5 jenkins jenkins 4096 Sep  3 13:13 application
++ echo 
+
++ echo ==================================
+==================================
++ echo Application files:
+Application files:
++ echo ==================================
+==================================
++ ls -la application
+total 164
+drwxr-xr-x  5 jenkins jenkins   4096 Sep  3 13:13 .
+drwxr-xr-x  4 jenkins jenkins   4096 Sep  3 11:25 ..
+-rw-r--r--  1 jenkins jenkins     74 Sep  3 11:25 .dockerignore
+-rw-r--r--  1 jenkins jenkins    103 Sep  3 11:25 .env.example
+-rw-r--r--  1 jenkins jenkins    338 Sep  3 11:25 .gitignore
+drwxr-xr-x  2 jenkins jenkins   4096 Sep  4 12:26 .scannerwork
+-rw-r--r--  1 jenkins jenkins    574 Sep  3 11:25 Dockerfile
+-rw-r--r--  1 jenkins jenkins    700 Sep  3 11:25 index.html
+-rw-r--r--  1 jenkins jenkins 106364 Sep  3 11:25 package-lock.json
+-rw-r--r--  1 jenkins jenkins    941 Sep  3 11:25 package.json
+drwxr-xr-x  3 jenkins jenkins   4096 Sep  3 11:25 public
+drwxr-xr-x 15 jenkins jenkins   4096 Sep  3 11:25 src
+-rw-r--r--  1 jenkins jenkins    579 Sep  3 11:25 tsconfig.json
+-rw-r--r--  1 jenkins jenkins    184 Sep  3 11:25 tsconfig.node.json
+-rw-r--r--  1 jenkins jenkins     65 Sep  3 11:25 vercel.json
+-rw-r--r--  1 jenkins jenkins    227 Sep  3 11:25 vite.config.ts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (SonarQube Analysis)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] tool
+[Pipeline] withSonarQubeEnv
+Injecting SonarQube environment variables using the configuration: SonarQube
+[Pipeline] {
+[Pipeline] sh
++ cd application
++ /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarScanner/bin/sonar-scanner -Dsonar.projectKey=Netflix-Clone-DevSecOps -Dsonar.sources=.
+12:36:12.810 INFO  Scanner configuration file: /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarScanner/conf/sonar-scanner.properties
+12:36:12.815 INFO  Project root configuration file: NONE
+12:36:12.844 INFO  SonarScanner CLI 8.1.0.6389
+12:36:12.859 INFO  Linux 7.0.0-1011-aws amd64
+12:36:14.583 INFO  Communicating with SonarQube Server 10.7.0.96327
+12:36:14.584 INFO  JRE provisioning: os[linux], arch[x86_64]
+12:36:15.351 INFO  Starting SonarScanner Engine...
+12:36:15.355 INFO  Java 17.0.11 Eclipse Adoptium (64-bit)
+12:36:17.098 INFO  Load global settings
+12:36:17.213 INFO  Load global settings (done) | time=113ms
+12:36:17.221 INFO  Server id: 147B411E-AaBnPUXFgaLdKtXkTZWN
+12:36:17.249 INFO  Loading required plugins
+12:36:17.249 INFO  Load plugins index
+12:36:17.268 INFO  Load plugins index (done) | time=18ms
+12:36:17.269 INFO  Load/download plugins
+12:36:17.335 INFO  Load/download plugins (done) | time=70ms
+12:36:17.910 INFO  Process project properties
+12:36:17.923 INFO  Process project properties (done) | time=12ms
+12:36:17.942 INFO  Project key: Netflix-Clone-DevSecOps
+12:36:17.943 INFO  Base dir: /var/lib/jenkins/workspace/Netflix-Clone-DevSecOps/application
+12:36:17.943 INFO  Working dir: /var/lib/jenkins/workspace/Netflix-Clone-DevSecOps/application/.scannerwork
+12:36:17.968 INFO  Load project settings for component key: 'Netflix-Clone-DevSecOps'
+12:36:18.001 INFO  Load project settings for component key: 'Netflix-Clone-DevSecOps' (done) | time=28ms
+12:36:18.079 INFO  Load quality profiles
+12:36:18.157 INFO  Load quality profiles (done) | time=78ms
+12:36:18.190 INFO  Auto-configuring with CI 'Jenkins'
+12:36:18.242 INFO  Load active rules
+12:36:26.257 INFO  Load active rules (done) | time=8016ms
+12:36:26.270 INFO  Load analysis cache
+12:36:26.298 INFO  Load analysis cache | time=26ms
+12:36:26.419 INFO  Preprocessing files...
+12:36:26.714 INFO  4 languages detected in 88 preprocessed files
+12:36:26.715 INFO  0 files ignored because of scm ignore settings
+12:36:26.720 INFO  Loading plugins for detected languages
+12:36:26.721 INFO  Load/download plugins
+12:36:26.727 INFO  Load/download plugins (done) | time=8ms
+12:36:26.964 INFO  Load project repositories
+12:36:26.989 INFO  Load project repositories (done) | time=26ms
+12:36:27.036 INFO  Indexing files...
+12:36:27.037 INFO  Project configuration:
+12:36:27.298 INFO  86 files indexed
+12:36:27.302 INFO  Quality profile for docker: Sonar way
+12:36:27.305 INFO  Quality profile for json: Sonar way
+12:36:27.305 INFO  Quality profile for ts: Sonar way
+12:36:27.308 INFO  Quality profile for web: Sonar way
+12:36:27.310 INFO  ------------- Run sensors on module Netflix-Clone-DevSecOps
+12:36:27.378 INFO  Load metrics repository
+12:36:27.425 INFO  Load metrics repository (done) | time=45ms
+12:36:28.244 INFO  Sensor HTML [web]
+12:36:28.381 INFO  Sensor HTML [web] (done) | time=138ms
+12:36:28.383 INFO  Sensor JaCoCo XML Report Importer [jacoco]
+12:36:28.385 INFO  'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+12:36:28.387 INFO  No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+12:36:28.388 INFO  Sensor JaCoCo XML Report Importer [jacoco] (done) | time=6ms
+12:36:28.388 INFO  Sensor IaC CloudFormation Sensor [iac]
+12:36:28.457 INFO  0 source files to be analyzed
+12:36:28.467 INFO  0/0 source files have been analyzed
+12:36:28.467 INFO  Sensor IaC CloudFormation Sensor [iac] (done) | time=80ms
+12:36:28.468 INFO  Sensor IaC AzureResourceManager Sensor [iac]
+12:36:28.579 INFO  0 source files to be analyzed
+12:36:28.582 INFO  0/0 source files have been analyzed
+12:36:28.588 INFO  Sensor IaC AzureResourceManager Sensor [iac] (done) | time=111ms
+12:36:28.588 INFO  Sensor Java Config Sensor [iac]
+12:36:28.592 INFO  0 source files to be analyzed
+12:36:28.597 INFO  0/0 source files have been analyzed
+12:36:28.600 INFO  Sensor Java Config Sensor [iac] (done) | time=13ms
+12:36:28.600 INFO  Sensor JavaScript/TypeScript analysis [javascript]
+12:36:30.986 INFO  Detected os: Linux arch: amd64 alpine: false. Platform: LINUX_X64
+12:36:31.004 INFO  Using embedded Node.js runtime.
+12:36:31.005 INFO  Using Node.js executable: '/var/lib/jenkins/.sonar/js/node-runtime/node'.
+12:36:34.331 INFO  Memory configuration: OS (7815 MB), Node.js (2096 MB).
+12:36:37.620 INFO  Found 1 tsconfig.json file(s): [/var/lib/jenkins/workspace/Netflix-Clone-DevSecOps/application/tsconfig.json]
+12:36:37.622 INFO  Creating TypeScript program
+12:36:37.622 INFO  TypeScript configuration file /var/lib/jenkins/workspace/Netflix-Clone-DevSecOps/application/tsconfig.json
+12:36:37.625 INFO  64 source files to be analyzed
+12:36:38.728 INFO  Starting analysis with current program
+12:36:45.878 INFO  Analyzed 63 file(s) with current program
+12:36:45.885 INFO  Creating TypeScript program
+12:36:45.885 INFO  TypeScript configuration file /var/lib/jenkins/workspace/Netflix-Clone-DevSecOps/application/tsconfig.node.json
+12:36:46.398 INFO  Starting analysis with current program
+12:36:46.590 INFO  Analyzed 1 file(s) with current program
+12:36:46.594 INFO  64/64 source files have been analyzed
+12:36:46.598 INFO  Hit the cache for 0 out of 64
+12:36:46.601 INFO  Miss the cache for 64 out of 64: ANALYSIS_MODE_INELIGIBLE [64/64]
+12:36:46.601 INFO  Sensor JavaScript/TypeScript analysis [javascript] (done) | time=18008ms
+12:36:46.601 INFO  Sensor JavaScript inside HTML analysis [javascript]
+12:36:46.612 INFO  2 source files to be analyzed
+12:36:46.668 INFO  2/2 source files have been analyzed
+12:36:46.672 INFO  Hit the cache for 0 out of 2
+12:36:46.672 INFO  Miss the cache for 2 out of 2: ANALYSIS_MODE_INELIGIBLE [2/2]
+12:36:46.674 INFO  Sensor JavaScript inside HTML analysis [javascript] (done) | time=68ms
+12:36:46.674 INFO  Sensor CSS Rules [javascript]
+12:36:46.683 INFO  2 source files to be analyzed
+12:36:46.936 INFO  2/2 source files have been analyzed
+12:36:46.937 INFO  Hit the cache for 0 out of 0
+12:36:46.939 INFO  Miss the cache for 0 out of 0
+12:36:46.940 INFO  Sensor CSS Rules [javascript] (done) | time=268ms
+12:36:46.942 INFO  Sensor IaC Docker Sensor [iac]
+12:36:47.008 INFO  1 source file to be analyzed
+12:36:47.139 INFO  1/1 source file has been analyzed
+12:36:47.140 INFO  Sensor IaC Docker Sensor [iac] (done) | time=204ms
+12:36:47.140 INFO  Sensor TextAndSecretsSensor [text]
+12:36:47.141 INFO  Available processors: 2
+12:36:47.143 INFO  Using 2 threads for analysis.
+12:36:48.048 INFO  The property "sonar.tests" is not set. To improve the analysis accuracy, we categorize a file as a test file if any of the following is true:
+  * The filename starts with "test"
+  * The filename contains "test." or "tests."
+  * Any directory in the file path is named: "doc", "docs", "test" or "tests"
+  * Any directory in the file path has a name ending in "test" or "tests"
+
+12:36:48.080 INFO  Using git CLI to retrieve untracked files
+12:36:48.174 INFO  Analyzing language associated files and files included via "sonar.text.inclusions" that are tracked by git
+12:36:48.225 INFO  73 source files to be analyzed
+12:36:48.953 INFO  73/73 source files have been analyzed
+12:36:48.956 INFO  Sensor TextAndSecretsSensor [text] (done) | time=1813ms
+12:36:48.960 INFO  ------------- Run sensors on project
+12:36:49.140 INFO  Sensor Zero Coverage Sensor
+12:36:49.166 INFO  Sensor Zero Coverage Sensor (done) | time=24ms
+12:36:49.197 INFO  CPD Executor 6 files had no CPD blocks
+12:36:49.198 INFO  CPD Executor Calculating CPD for 60 files
+12:36:49.271 INFO  CPD Executor CPD calculation finished (done) | time=69ms
+12:36:49.279 INFO  SCM revision ID '964fa7277ed97a6ccdac7525e714214d3f650a7d'
+12:36:49.454 INFO  Analysis report generated in 158ms, dir size=516.9 kB
+12:36:49.621 INFO  Analysis report compressed in 167ms, zip size=266.5 kB
+12:36:49.655 INFO  Analysis report uploaded in 31ms
+12:36:49.656 INFO  ANALYSIS SUCCESSFUL, you can find the results at: http://172.31.17.82:9000/dashboard?id=Netflix-Clone-DevSecOps
+12:36:49.658 INFO  Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+12:36:49.658 INFO  More about the report processing at http://172.31.17.82:9000/api/ce/task?id=3e500ad0-7fc9-4030-8e21-899673c88776
+12:36:50.498 INFO  Analysis total time: 32.995 s
+12:36:50.501 INFO  SonarScanner Engine completed successfully
+12:36:50.840 INFO  EXECUTION SUCCESS
+12:36:50.841 INFO  Total time: 38.080s
+[Pipeline] }
+[Pipeline] // withSonarQubeEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Quality Gate)
+[Pipeline] timeout
+Timeout set to expire in 5 min 0 sec
+[Pipeline] {
+[Pipeline] waitForQualityGate
+Checking status of SonarQube task '3e500ad0-7fc9-4030-8e21-899673c88776' on server 'SonarQube'
+SonarQube task '3e500ad0-7fc9-4030-8e21-899673c88776' status is 'IN_PROGRESS'
+SonarQube task '3e500ad0-7fc9-4030-8e21-899673c88776' status is 'SUCCESS'
+SonarQube task '3e500ad0-7fc9-4030-8e21-899673c88776' completed. Quality gate is 'OK'
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Docker Build)
+[Pipeline] withCredentials
+Masking supported pattern matches of $TMDB_API_KEY
+[Pipeline] {
+[Pipeline] sh
++ echo Building Docker image...
+Building Docker image...
++ cd application
++ docker build --build-arg VITE_APP_TMDB_V3_API_KEY=**** -t netflix-clone:latest .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  8.211MB
+Step 1/12 : FROM node:20-alpine AS builder
+ ---> fb4cd12c85ee
+Step 2/12 : WORKDIR /app
+ ---> Running in fbc6c1a206cf
+ ---> Removed intermediate container fbc6c1a206cf
+ ---> 16c2d5750c98
+Step 3/12 : COPY package*.json ./
+ ---> 4e8e347b6c3c
+Step 4/12 : RUN npm ci
+ ---> Running in 10011e4342e8
+[91mnpm warn deprecated sourcemap-codec@1.4.8: Please use @jridgewell/sourcemap-codec instead
+[0m[91mnpm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+[0m[91mnpm warn deprecated glob@7.1.6: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+[0m[91mnpm warn deprecated @xmldom/xmldom@0.8.6: this version has critical issues, please update to the latest version
+[0m[91mnpm warn deprecated @mui/base@5.0.0-alpha.104: This package has been replaced by @base-ui/react
+[0m
+added 220 packages, and audited 221 packages in 16s
+
+23 packages are looking for funding
+  run `npm fund` for details
+
+14 vulnerabilities (1 low, 3 moderate, 10 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+[91mnpm notice
+npm notice New major version of npm available! 10.8.2 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+[0m ---> Removed intermediate container 10011e4342e8
+ ---> 5ba7af85d36d
+Step 5/12 : COPY . .
+ ---> 128bfdffaeb2
+Step 6/12 : ARG VITE_APP_TMDB_V3_API_KEY
+ ---> Running in 24bac9a76bf4
+ ---> Removed intermediate container 24bac9a76bf4
+ ---> 3c1998d1dd91
+Step 7/12 : ENV VITE_APP_TMDB_V3_API_KEY=$VITE_APP_TMDB_V3_API_KEY
+ ---> Running in 7736aac779ab
+ ---> Removed intermediate container 7736aac779ab
+ ---> 964827ce74c4
+Step 8/12 : RUN npm run build
+ ---> Running in 27e7e452e10b
+
+> netflix-clone-using-react-typescript-mui@0.1.1 build
+> tsc && vite build
+
+vite v3.2.2 building for production...
+transforming...
+✓ 1513 modules transformed.
+rendering chunks...
+dist/assets/ajax-loader.e7b44c86.gif         4.08 KiB
+dist/assets/slick.12459f22.svg               2.10 KiB
+dist/index.html                              0.77 KiB
+dist/assets/VideoItemWithHover.16b2421b.js   1.34 KiB / gzip: 0.78 KiB
+dist/assets/GenreExplore.77e1b8fd.js         1.41 KiB / gzip: 0.82 KiB
+dist/assets/WatchPage.0a6d320e.js            25.86 KiB / gzip: 9.06 KiB
+dist/assets/index.a62a091f.css               55.88 KiB / gzip: 15.16 KiB
+dist/assets/HomePage.3c638a2e.js             69.76 KiB / gzip: 20.07 KiB
+dist/assets/index.c8d8eef3.js                1152.27 KiB / gzip: 357.94 KiB
+[91m
+(!) Some chunks are larger than 500 KiB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/guide/en/#outputmanualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[0m ---> Removed intermediate container 27e7e452e10b
+ ---> 06a2a215f948
+Step 9/12 : FROM nginx:alpine
+ ---> a9ae6f6d078d
+Step 10/12 : COPY --from=builder /app/dist /usr/share/nginx/html
+ ---> a49ba817fda7
+Step 11/12 : EXPOSE 80
+ ---> Running in ab223b63f483
+ ---> Removed intermediate container ab223b63f483
+ ---> f053d9a406a1
+Step 12/12 : CMD ["nginx", "-g", "daemon off;"]
+ ---> Running in 93e27e10dd36
+ ---> Removed intermediate container 93e27e10dd36
+ ---> f710d4e2b143
+Successfully built f710d4e2b143
+Successfully tagged netflix-clone:latest
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Trivy Image Scan)
+[Pipeline] sh
++ echo Scanning Docker image with Trivy...
+Scanning Docker image with Trivy...
++ trivy image --severity HIGH,CRITICAL --no-progress netflix-clone:latest
+2026-09-04T12:38:44Z	INFO	[vuln] Vulnerability scanning is enabled
+2026-09-04T12:38:44Z	INFO	[secret] Secret scanning is enabled
+2026-09-04T12:38:44Z	INFO	[secret] If your scanning is slow, please try '--scanners vuln' to disable secret scanning
+2026-09-04T12:38:44Z	INFO	[secret] Please see https://trivy.dev/docs/v0.71/guide/scanner/secret#recommendation for faster secret detection
+2026-09-04T12:38:45Z	INFO	Detected OS	family="alpine" version="3.24.1"
+2026-09-04T12:38:45Z	WARN	This OS version is not on the EOL list	family="alpine" version="3.24"
+2026-09-04T12:38:45Z	INFO	[alpine] Detecting vulnerabilities...	os_version="3.24" repository="3.24" pkg_num=71
+2026-09-04T12:38:45Z	INFO	Number of language-specific files	num=0
+
+Report Summary
+
+┌──────────────────────────────────────┬────────┬─────────────────┬─────────┐
+│                Target                │  Type  │ Vulnerabilities │ Secrets │
+├──────────────────────────────────────┼────────┼─────────────────┼─────────┤
+│ netflix-clone:latest (alpine 3.24.1) │ alpine │        0        │    -    │
+└──────────────────────────────────────┴────────┴─────────────────┴─────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+📣 [34mNotices:[0m
+  - Version 0.74.0 of Trivy is now available, current version is 0.71.2
+
+To suppress version checks, run Trivy scans with the --skip-version-check flag
+
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Login to Amazon ECR)
+[Pipeline] sh
++ echo Logging in to Amazon ECR...
+Logging in to Amazon ECR...
++ aws ecr get-login-password --region ap-south-2
++ docker login --username AWS --password-stdin 516807979267.dkr.ecr.ap-south-2.amazonaws.com
+
+WARNING! Your credentials are stored unencrypted in '/var/lib/jenkins/.docker/config.json'.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/go/credential-store/
+
+Login Succeeded
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Tag Docker Image)
+[Pipeline] sh
++ echo Tagging Docker image...
+Tagging Docker image...
++ docker tag netflix-clone:latest 516807979267.dkr.ecr.ap-south-2.amazonaws.com/netflix-clone-devsecops:latest
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push Image to Amazon ECR)
+[Pipeline] sh
++ echo Pushing image to Amazon ECR...
+Pushing image to Amazon ECR...
++ docker push 516807979267.dkr.ecr.ap-south-2.amazonaws.com/netflix-clone-devsecops:latest
+The push refers to repository [516807979267.dkr.ecr.ap-south-2.amazonaws.com/netflix-clone-devsecops]
+8f924cf5086c: Layer already exists
+51900e10fb9c: Layer already exists
+6636b9fc203c: Layer already exists
+54110135d07c: Waiting
+55afa1ecc21d: Layer already exists
+af7dd138f459: Layer already exists
+58c524ea09ce: Layer already exists
+bc98d7675616: Layer already exists
+850bf2dcecff: Layer already exists
+54110135d07c: Pushed
+latest: digest: sha256:f710d4e2b14351e6708e24d85fcf326c08ec46f5d7230a8bfc877d730958c379 size: 2265
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy to Application EC2)
+[Pipeline] sshagent
+[ssh-agent] Using credentials ubuntu
+$ ssh-agent
+SSH_AUTH_SOCK=/var/lib/jenkins/.ssh/agent/s.Fk6gkzte3F.agent.ia5AC8Lsls
+SSH_AGENT_PID=15992
+Running ssh-add (command line suppressed)
+[ssh-agent] Started.
+[Pipeline] {
+[Pipeline] sh
++ ssh -o StrictHostKeyChecking=no ubuntu@18.61.255.197
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+Welcome to Ubuntu 26.04 LTS (GNU/Linux 7.0.0-1006-aws x86_64)
+
+ * Documentation:  https://docs.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Fri Sep  4 12:38:49 UTC 2026
+
+  System load:  0.0                Temperature:           -273.1 C
+  Usage of /:   10.1% of 27.95GB   Processes:             125
+  Memory usage: 5%                 Users logged in:       0
+  Swap usage:   0%                 IPv4 address for ens5: 172.31.22.8
+
+ * Ubuntu Pro delivers the most comprehensive open source security and
+   compliance features.
+
+   https://ubuntu.com/aws/pro
+
+Expanded Security Maintenance for Applications is not enabled.
+
+160 updates can be applied immediately.
+127 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Connected to Application EC2
+Logging in to ECR...
+Login Succeeded
+
+WARNING! Your credentials are stored unencrypted in '/home/ubuntu/.docker/config.json'.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/go/credential-store/
+
+Pulling latest image...
+latest: Pulling from netflix-clone-devsecops
+54110135d07c: Pulling fs layer
+54110135d07c: Download complete
+54110135d07c: Pull complete
+Digest: sha256:f710d4e2b14351e6708e24d85fcf326c08ec46f5d7230a8bfc877d730958c379
+Status: Downloaded newer image for 516807979267.dkr.ecr.ap-south-2.amazonaws.com/netflix-clone-devsecops:latest
+516807979267.dkr.ecr.ap-south-2.amazonaws.com/netflix-clone-devsecops:latest
+Stopping old container...
+netflix-application
+Removing old container...
+netflix-application
+Starting new container...
+64854d189c7371b632ac688ec6e1aa4e88a0be04c5f8ac84286e0e777dc9de0d
+Deployment completed!
+[Pipeline] }
+$ ssh-agent -k
+unset SSH_AUTH_SOCK;
+unset SSH_AGENT_PID;
+echo Agent pid 15992 killed;
+[ssh-agent] Stopped.
+[Pipeline] // sshagent
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verify Deployment)
+[Pipeline] sh
++ echo Waiting for application...
+Waiting for application...
++ sleep 10
++ curl -I http://18.61.255.197
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0  0    791   0      0   0      0      0      0                              0  0    791   0      0   0      0      0      0                              0  0    791   0      0   0      0      0      0                              0
+HTTP/1.1 200 OK
+Server: nginx/1.31.5
+Date: Fri, 04 Sep 2026 12:39:02 GMT
+Content-Type: text/html
+Content-Length: 791
+Last-Modified: Fri, 04 Sep 2026 12:38:36 GMT
+Connection: keep-alive
+ETag: "6a9abbcc-317"
+Accept-Ranges: bytes
+
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] sh
++ echo Cleaning unused Docker images...
+Cleaning unused Docker images...
++ docker image prune -f
+Deleted Images:
+untagged: sha256:16c2d5750c989e87a86e77a6201dc712c526897feb30ce885238a4f2968ae18a
+deleted: sha256:16c2d5750c989e87a86e77a6201dc712c526897feb30ce885238a4f2968ae18a
+untagged: sha256:3c1998d1dd91b1104729bbb0c60e1d17bb395ddb64783c01180ed04febc3e896
+deleted: sha256:3c1998d1dd91b1104729bbb0c60e1d17bb395ddb64783c01180ed04febc3e896
+untagged: sha256:964827ce74c41e8faabbd285409cd0abe7815c543ca7698d555cc8712af6f0b8
+deleted: sha256:964827ce74c41e8faabbd285409cd0abe7815c543ca7698d555cc8712af6f0b8
+untagged: sha256:06a2a215f948b679f6ab51d27e253ee1196a5fce5d11741a6c29e8a9b0e77fb5
+deleted: sha256:06a2a215f948b679f6ab51d27e253ee1196a5fce5d11741a6c29e8a9b0e77fb5
+untagged: sha256:128bfdffaeb21e21fe9e94cdc817cea00576a6b03fc496ccf0d79cf9cbc1bd39
+deleted: sha256:128bfdffaeb21e21fe9e94cdc817cea00576a6b03fc496ccf0d79cf9cbc1bd39
+untagged: sha256:4e8e347b6c3ca0401007e2bfeb1cb691ea0acc682e8e9fff58197e715179433f
+deleted: sha256:4e8e347b6c3ca0401007e2bfeb1cb691ea0acc682e8e9fff58197e715179433f
+untagged: sha256:5ba7af85d36d11ffae5c620f61b5a809dbe2a595c148e09de20c79983798bb42
+deleted: sha256:5ba7af85d36d11ffae5c620f61b5a809dbe2a595c148e09de20c79983798bb42
+untagged: sha256:a49ba817fda71bc710637831c6d184f15577ff558fd1ce4ae25421fb30bb4035
+deleted: sha256:a49ba817fda71bc710637831c6d184f15577ff558fd1ce4ae25421fb30bb4035
+untagged: sha256:f053d9a406a1ca3c9a91d936e6b1a5093c106b5387f22a7e12b02a5c02c6d533
+deleted: sha256:f053d9a406a1ca3c9a91d936e6b1a5093c106b5387f22a7e12b02a5c02c6d533
+
+Total reclaimed space: 106.9MB
+[Pipeline] echo
+
+==================================
+PIPELINE SUCCESSFUL!
+==================================
+
+Application deployed successfully.
+
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
