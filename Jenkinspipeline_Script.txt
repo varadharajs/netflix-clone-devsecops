@@ -1,0 +1,263 @@
+pipeline {
+
+    agent any
+
+    environment {
+        AWS_REGION     = 'ap-south-2'
+        AWS_ACCOUNT_ID = '516807979267'
+        ECR_REPOSITORY = 'netflix-clone-devsecops'
+
+        IMAGE_TAG = 'latest'
+
+        APPLICATION_IP = '18.61.255.197'
+        SSH_USER = 'ubuntu'
+    }
+
+    stages {
+
+        stage('Checkout Source Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/varadharajs/netflix-clone-devsecops.git'
+            }
+        }
+
+
+        stage('Check Project Files') {
+            steps {
+                sh '''
+                    echo "=================================="
+                    echo "Project files:"
+                    echo "=================================="
+
+                    ls -la
+
+                    echo ""
+                    echo "=================================="
+                    echo "Application files:"
+                    echo "=================================="
+
+                    ls -la application
+                '''
+            }
+        }
+
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+
+                    def scannerHome = tool 'SonarScanner'
+
+                    withSonarQubeEnv('SonarQube') {
+
+                        sh """
+                            cd application
+
+                            ${scannerHome}/bin/sonar-scanner \
+                              -Dsonar.projectKey=Netflix-Clone-DevSecOps \
+                              -Dsonar.sources=.
+                        """
+                    }
+                }
+            }
+        }
+
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+
+        stage('Docker Build') {
+            steps {
+
+                withCredentials([
+                    string(
+                        credentialsId: 'TMDB_API_KEY',
+                        variable: 'TMDB_API_KEY'
+                    )
+                ]) {
+
+                    sh '''
+                        echo "Building Docker image..."
+
+                        cd application
+
+                        docker build \
+                          --build-arg VITE_APP_TMDB_V3_API_KEY="$TMDB_API_KEY" \
+                          -t netflix-clone:latest .
+                    '''
+                }
+            }
+        }
+
+
+        stage('Trivy Image Scan') {
+            steps {
+
+                sh '''
+                    echo "Scanning Docker image with Trivy..."
+
+                    trivy image \
+                      --severity HIGH,CRITICAL \
+                      --no-progress \
+                      netflix-clone:latest
+                '''
+            }
+        }
+
+
+        stage('Login to Amazon ECR') {
+            steps {
+
+                sh '''
+                    echo "Logging in to Amazon ECR..."
+
+                    aws ecr get-login-password \
+                      --region $AWS_REGION | \
+                    docker login \
+                      --username AWS \
+                      --password-stdin \
+                      $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+                '''
+            }
+        }
+
+
+        stage('Tag Docker Image') {
+            steps {
+
+                sh '''
+                    echo "Tagging Docker image..."
+
+                    docker tag netflix-clone:latest \
+                      $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+                '''
+            }
+        }
+
+
+        stage('Push Image to Amazon ECR') {
+            steps {
+
+                sh '''
+                    echo "Pushing image to Amazon ECR..."
+
+                    docker push \
+                      $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG
+                '''
+            }
+        }
+
+
+        stage('Deploy to Application EC2') {
+            steps {
+
+                sshagent(credentials: ['application-ec2-ssh-key']) {
+
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no \
+                            ubuntu@18.61.255.197 << 'EOF'
+
+                        set -e
+
+                        echo "Connected to Application EC2"
+
+                        AWS_REGION="ap-south-2"
+                        AWS_ACCOUNT_ID="516807979267"
+                        ECR_REPOSITORY="netflix-clone-devsecops"
+
+                        ECR_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest"
+
+                        echo "Logging in to ECR..."
+
+                        aws ecr get-login-password \
+                            --region $AWS_REGION | \
+                        docker login \
+                            --username AWS \
+                            --password-stdin \
+                            $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+                        echo "Pulling latest image..."
+
+                        docker pull $ECR_URI
+
+                        echo "Stopping old container..."
+
+                        docker stop netflix-application || true
+
+                        echo "Removing old container..."
+
+                        docker rm netflix-application || true
+
+                        echo "Starting new container..."
+
+                        docker run -d \
+                            --name netflix-application \
+                            --restart unless-stopped \
+                            -p 80:80 \
+                            $ECR_URI
+
+                        echo "Deployment completed!"
+
+EOF
+                    '''
+                }
+            }
+        }
+
+
+        stage('Verify Deployment') {
+            steps {
+
+                sh '''
+                    echo "Waiting for application..."
+
+                    sleep 10
+
+                    curl -I http://18.61.255.197
+                '''
+            }
+        }
+    }
+
+
+    post {
+
+        success {
+            echo '''
+==================================
+PIPELINE SUCCESSFUL!
+==================================
+
+Application deployed successfully.
+'''
+        }
+
+
+        failure {
+            echo '''
+==================================
+PIPELINE FAILED!
+
+Check the Jenkins Console Output
+to identify the failed stage.
+==================================
+'''
+        }
+
+
+        always {
+            sh '''
+                echo "Cleaning unused Docker images..."
+
+                docker image prune -f || true
+            '''
+        }
+    }
+}
